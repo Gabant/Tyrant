@@ -1,55 +1,54 @@
 
 #include "Mycommon.h"
 
-//ÉèÖÃÓÅÏÈ¼¶
+//è®¾ç½®ä¼˜å…ˆçº§
 
 float Fuzzy_Servo ;
 int midline[ROW] ;
 
 int time1,time2;
 
-/***************************²¦Âë¿ª¹Ø±êÖ¾Î»*****************************************/
+/***************************æ‹¨ç å¼€å…³æ ‡å¿—ä½*****************************************/
 int SendData_Flag = 0, SingleRun_Flag = 0, DoubleRun_Flag = 0, Adjustment_Flag = 0;
 
 void nvic_init(void)
 {
+	//ä¸­æ–­	
 	NVIC_InitTypeDef NVIC_InitStructure0;
-	NVIC_InitStructure0.NVIC_IRQChannel = PIT0_IRQn;                         //Ö¸Ã÷ÒªÅäÖÃµÄÍ¨µÀºÅ 
+	NVIC_InitStructure0.NVIC_IRQChannel = PIT0_IRQn;                         //æŒ‡æ˜è¦é…ç½®çš„é€šé“å· 
 	NVIC_InitStructure0.NVIC_IRQChannelGroupPriority = NVIC_PriorityGroup_2;
-	NVIC_InitStructure0.NVIC_IRQChannelPreemptionPriority = 0x03;            //ÇÀÕ¼ÓÅÏÈ¼¶1  
-	NVIC_InitStructure0.NVIC_IRQChannelSubPriority = 0x00;                   //ÏìÓ¦ÓÅÏÈ¼¶1 
-	NVIC_InitStructure0.NVIC_IRQChannelEnable = TRUE;                        //Ê¹ÄÜPIT0_IRQnÖĞ¶ÏÍ¨µÀ 
+	NVIC_InitStructure0.NVIC_IRQChannelPreemptionPriority = 0x03;            //æŠ¢å ä¼˜å…ˆçº§1  
+	NVIC_InitStructure0.NVIC_IRQChannelSubPriority = 0x00;                   //å“åº”ä¼˜å…ˆçº§1 
+	NVIC_InitStructure0.NVIC_IRQChannelEnable = TRUE;                        //ä½¿èƒ½PIT0_IRQnä¸­æ–­é€šé“ 
 	LPLD_NVIC_Init(NVIC_InitStructure0);
-        //ÉãÏñÍ·
+        //æ‘„åƒå¤´
 	NVIC_InitTypeDef NVIC_InitStructure1;
 	NVIC_InitStructure1.NVIC_IRQChannel = PORTB_IRQn;
 	NVIC_InitStructure1.NVIC_IRQChannelGroupPriority = NVIC_PriorityGroup_2;
-	NVIC_InitStructure1.NVIC_IRQChannelPreemptionPriority = 0x00;  //ÇÀÕ¼ÓÅÏÈ¼¶0  
-	NVIC_InitStructure1.NVIC_IRQChannelSubPriority = 0x00;     //ÏìÓ¦ÓÅÏÈ¼¶0  
-	NVIC_InitStructure1.NVIC_IRQChannelEnable = TRUE;      //Ê¹ÄÜÍâ²¿ÖĞ¶ÏÍ¨µÀ 
-	LPLD_NVIC_Init(NVIC_InitStructure1);     //¸ù¾İNVIC_InitStructÖĞÖ¸¶¨µÄ²ÎÊı³õÊ¼»¯ÍâÉèNVIC¼Ä´æÆ÷
+	NVIC_InitStructure1.NVIC_IRQChannelPreemptionPriority = 0x00;  //æœ€é«˜ä¼˜å…ˆçº§  
+	NVIC_InitStructure1.NVIC_IRQChannelSubPriority = 0x00;     //å“åº”ä¼˜å…ˆçº§0  
+	NVIC_InitStructure1.NVIC_IRQChannelEnable = TRUE;      //ä½¿èƒ½å¤–éƒ¨ä¸­æ–­é€šé“ 
+	LPLD_NVIC_Init(NVIC_InitStructure1);     //æ ¹æ®NVIC_InitStructä¸­æŒ‡å®šçš„å‚æ•°åˆå§‹åŒ–å¤–è®¾NVICå¯„å­˜å™¨
 
-	
-        
-        //³¬Éù²¨
+        //è¶…å£°æ³¢
         NVIC_InitTypeDef NVIC_InitStructure3;
         
 	NVIC_InitStructure3.NVIC_IRQChannel = PORTD_IRQn;
 	NVIC_InitStructure3.NVIC_IRQChannelGroupPriority = NVIC_PriorityGroup_2;
-	NVIC_InitStructure3.NVIC_IRQChannelPreemptionPriority = 0x02;  //ÇÀÕ¼ÓÅÏÈ¼¶2 
-	NVIC_InitStructure3.NVIC_IRQChannelSubPriority = 0x00;     //ÏìÓ¦ÓÅÏÈ¼¶0 
-	NVIC_InitStructure3.NVIC_IRQChannelEnable = TRUE;      //Ê¹ÄÜÍâ²¿ÖĞ¶ÏÍ¨µÀ
-	LPLD_NVIC_Init(NVIC_InitStructure3);     //¸ù¾İNVIC_InitStructÖĞÖ¸¶¨µÄ²ÎÊı³õÊ¼»¯ÍâÉèNVIC¼Ä´æÆ÷
+	NVIC_InitStructure3.NVIC_IRQChannelPreemptionPriority = 0x02;  //æŠ¢å ä¼˜å…ˆçº§2 
+	NVIC_InitStructure3.NVIC_IRQChannelSubPriority = 0x00;     //å“åº”ä¼˜å…ˆçº§0 
+	NVIC_InitStructure3.NVIC_IRQChannelEnable = TRUE;      //ä½¿èƒ½å¤–éƒ¨ä¸­æ–­é€šé“
+	LPLD_NVIC_Init(NVIC_InitStructure3);     //æ ¹æ®NVIC_InitStructä¸­æŒ‡å®šçš„å‚æ•°åˆå§‹åŒ–å¤–è®¾NVICå¯„å­˜å™¨
 
 	//nRF
         NVIC_InitTypeDef NVIC_InitStructure4;
         
 	NVIC_InitStructure4.NVIC_IRQChannel = PORTC_IRQn;
 	NVIC_InitStructure4.NVIC_IRQChannelGroupPriority = NVIC_PriorityGroup_2;
-	NVIC_InitStructure4.NVIC_IRQChannelPreemptionPriority = 0x01;  //ÇÀÕ¼ÓÅÏÈ¼¶1 
-	NVIC_InitStructure4.NVIC_IRQChannelSubPriority = 0x00;     //ÏìÓ¦ÓÅÏÈ¼¶0 
-	NVIC_InitStructure4.NVIC_IRQChannelEnable = TRUE;      //Ê¹ÄÜÍâ²¿ÖĞ¶ÏÍ¨µÀ
-	LPLD_NVIC_Init(NVIC_InitStructure4);     //¸ù¾İNVIC_InitStructÖĞÖ¸¶¨µÄ²ÎÊı³õÊ¼»¯ÍâÉèNVIC¼Ä´æÆ÷
+	NVIC_InitStructure4.NVIC_IRQChannelPreemptionPriority = 0x01;  //æŠ¢å ä¼˜å…ˆçº§1 
+	NVIC_InitStructure4.NVIC_IRQChannelSubPriority = 0x00;     //å“åº”ä¼˜å…ˆçº§0 
+	NVIC_InitStructure4.NVIC_IRQChannelEnable = TRUE;      //ä½¿èƒ½å¤–éƒ¨ä¸­æ–­é€šé“
+	LPLD_NVIC_Init(NVIC_InitStructure4);     //æ ¹æ®NVIC_InitStructä¸­æŒ‡å®šçš„å‚æ•°åˆå§‹åŒ–å¤–è®¾NVICå¯„å­˜å™¨
 
 }
 
@@ -65,7 +64,7 @@ void Show_LCD_Image(unsigned char videodata[ROW][COLUMN])
           for (j = 0; j < 8; j++)
 		{
 			OLED_Set_Address(j, k);
-			//°´±ÈÀıÏÔÊ¾ÔÚÏÔÊ¾ÆÁÉÏ
+			//æŒ‰æ¯”ä¾‹æ˜¾ç¤ºåœ¨æ˜¾ç¤ºå±ä¸Š
 			temp = (videodata[j * 8 * (ROW - 1) / 63][k*(COLUMN - 1) / 127]) | (videodata[(j * 8 + 1)*(ROW - 1) / 63][k*(COLUMN - 1) / 127] << 1)
 				| (videodata[(j * 8 + 2)*(ROW - 1) / 63][k*(COLUMN - 1) / 127] << 2) | (videodata[(j * 8 + 3)*(ROW - 1) / 63][k*(COLUMN - 1) / 127] << 3)
 				| (videodata[(j * 8 + 4)*(ROW - 1) / 63][k*(COLUMN - 1) / 127] << 4) | (videodata[(j * 8 + 5)*(ROW - 1) / 63][k*(COLUMN - 1) / 127] << 5)
@@ -139,7 +138,7 @@ void Show_LCD_Bianjie(int L[ROW],int R[ROW],int midline[ROW])
 */
 
 
-//ÏÔÊ¾×óÏß£¬ÓÒÏß£¬ÖĞÏß£¬½ØÖ¹×î´óĞĞ£¬½ØÖ¹ĞĞ£¬¿ØÖÆĞĞ
+//æ˜¾ç¤ºå·¦çº¿ï¼Œå³çº¿ï¼Œä¸­çº¿ï¼Œæˆªæ­¢æœ€å¤§è¡Œï¼Œæˆªæ­¢è¡Œï¼Œæ§åˆ¶è¡Œ
 void showmoi()
 {
   unsigned char i = 0, j = 0, temp = 0;
@@ -150,7 +149,7 @@ void showmoi()
           for (j = 0; j < 8; j++)
           {
                   OLED_Set_Address(j, i);
-                  //°´±ÈÀıÏÔÊ¾ÔÚÏÔÊ¾ÆÁÉÏ
+                  //æŒ‰æ¯”ä¾‹æ˜¾ç¤ºåœ¨æ˜¾ç¤ºå±ä¸Š
                   temp = (showline[j * 8 * (ROW - 1) / 63][i*(COLUMN - 1) / 127]) | (showline[(j * 8 + 1)*(ROW - 1) / 63][i*(COLUMN - 1) / 127] << 1)
                           | (showline[(j * 8 + 2)*(ROW - 1) / 63][i*(COLUMN - 1) / 127] << 2) | (showline[(j * 8 + 3)*(ROW - 1) / 63][i*(COLUMN - 1) / 127] << 3)
                           | (showline[(j * 8 + 4)*(ROW - 1) / 63][i*(COLUMN - 1) / 127] << 4) | (showline[(j * 8 + 5)*(ROW - 1) / 63][i*(COLUMN - 1) / 127] << 5)
@@ -167,15 +166,15 @@ void System_Init()
 {
       uint8 status=0;
      status=LPLD_Nrf24L01_Init();
-     //¼ì²ânrfÊÇ·ñÕı³£¹¤×÷
-     if(!status)        //±¨¾¯ÌáÊ¾
+     //æ£€æµ‹nrfæ˜¯å¦æ­£å¸¸å·¥ä½œ
+     if(!status)        //æŠ¥è­¦æç¤º
      {
        OLED_Init();
        OLED_Write_Str16X8(0,0,"NRF maybe WRONG");
        while(OLED_Key_Scan()==0);
      }
   
-     BOMA_Scanf();//²¦Âë¿ª¹Ø£¬ÏàÓ¦µÄº¯ÊıÔÚflash.c,Òı½Å³õÊ¼»¯ÔÚoled.cÖĞµÄOLED_IO_InitÖĞ
+     BOMA_Scanf();//æ‹¨ç å¼€å…³ï¼Œç›¸åº”çš„å‡½æ•°åœ¨flash.c,å¼•è„šåˆå§‹åŒ–åœ¨oled.cä¸­çš„OLED_IO_Initä¸­
      direction_pwm_init();
     
       
@@ -227,7 +226,7 @@ void System_Init()
 
 unsigned char show;
 uint8 IncP=0;
-void main(void)         /////uartÄ£¿é´«ÊäÊı¾İ»áÑÏÖØÍÏÂıÊ±¼ä
+void main(void)         /////uartæ¨¡å—ä¼ è¾“æ•°æ®ä¼šä¸¥é‡æ‹–æ…¢æ—¶é—´
 {
 
    DisableInterrupts; 
@@ -265,7 +264,7 @@ void main(void)         /////uartÄ£¿é´«ÊäÊı¾İ»áÑÏÖØÍÏÂıÊ±¼ä
        field_over = 0;
        
        
-    /*****************************ÅÜ³µÄ£Ê½*************************************/
+    /*****************************è·‘è½¦æ¨¡å¼*************************************/
        if(SingleRun_Flag || DoubleRun_Flag)
        {
          direction();
@@ -273,11 +272,11 @@ void main(void)         /////uartÄ£¿é´«ÊäÊı¾İ»áÑÏÖØÍÏÂıÊ±¼ä
        
     }
    
-     /****************************Ê¾²¨Æ÷³ÌĞò*********************************/
+     /****************************ç¤ºæ³¢å™¨ç¨‹åº*********************************/
      if(SendData_Flag)
        Visual_Scope_Output(); 
      
-     /**************************Í¼ÏñĞ£Õı³ÌĞò**********************************/
+     /**************************å›¾åƒæ ¡æ­£ç¨‹åº**********************************/
      if(Adjustment_Flag)
      {
        int i,j;       
